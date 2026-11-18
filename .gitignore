@@ -1,0 +1,45 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets. Never commit credentials.
+.env
+.env.*
+*.pem
+*.key
+*.token
+
+# Supplied raw data (not redistributed through the repository)
+data/raw/*
+!data/raw/.gitkeep
+data/eval/*
+!data/eval/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Archives and notebooks
+*.zip
+.ipynb_checkpoints/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local verification scaffolding, not part of the delivered project
+tests/
+*.test.py
+
+# Local scratch directories created by the Makefile
+.tmp/
+.mpl/

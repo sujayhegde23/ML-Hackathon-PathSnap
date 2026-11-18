@@ -1,0 +1,28 @@
+# Dataset layout and loading behaviour.
+#
+# The supplied trip data is not committed to this repository. Point `data_root` at a
+# directory that contains the partition folders, or leave it null and set the
+# PATHSNAP_DATA_ROOT environment variable.
+
+data_root: null
+
+partitions:
+  - train          # 80 trips: fitting, cross-validation
+  - student_test   # 10 trips: development-stage evaluation
+  - eval           # 10 trips: injected at grading time, never used for training
+
+files:
+  track: .track    # longitude latitude timestamp_s
+  nodes: .nodes    # longitude latitude          (row index = node id)
+  arcs:  .arcs     # from_node_id to_node_id     (row index = arc id)
+  route: .route    # arc_id                      (traversal order)
+
+validation:
+  # A gap larger than this is reported as a warning and later treated as a
+  # trajectory break by the decoder.
+  gap_threshold_s: 60.0
+  coordinate_bounds:
+    longitude: [-180.0, 180.0]
+    latitude: [-90.0, 90.0]
+
+seed: 42

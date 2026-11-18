@@ -1,0 +1,98 @@
+{
+  "data_root": "/home/kana/shriniketh/work/Student folder",
+  "mode": "training",
+  "total_trips": 90,
+  "trips_ok": 90,
+  "trips_with_errors": [],
+  "by_partition": {
+    "student_test": {
+      "trips": 10,
+      "loaded": 10,
+      "ok": 10,
+      "gps_points": 19160,
+      "nodes": 90689,
+      "arcs": 185041,
+      "route_arcs": 3477
+    },
+    "train": {
+      "trips": 80,
+      "loaded": 80,
+      "ok": 80,
+      "gps_points": 208417,
+      "nodes": 1933485,
+      "arcs": 3876904,
+      "route_arcs": 31336
+    }
+  },
+  "issue_counts": {
+    "W_DT_GAP": 23,
+    "W_DUPLICATE_ARCS": 60,
+    "W_GPS_DUPLICATE": 5,
+    "W_ROUTE_CHAIN_BREAK": 11,
+    "W_ROUTE_REVISIT": 10
+  },
+  "issue_examples": {
+    "W_DT_GAP": {
+      "trips_affected": 23,
+      "examples": [
+        "train/00000002",
+        "train/00000006",
+        "train/00000011",
+        "train/00000014",
+        "train/00000021",
+        "train/00000024",
+        "train/00000028",
+        "train/00000041"
+      ]
+    },
+    "W_DUPLICATE_ARCS": {
+      "trips_affected": 60,
+      "examples": [
+        "train/00000001",
+        "train/00000003",
+        "train/00000004",
+        "train/00000008",
+        "train/00000010",
+        "train/00000013",
+        "train/00000014",
+        "train/00000016"
+      ]
+    },
+    "W_GPS_DUPLICATE": {
+      "trips_affected": 5,
+      "examples": [
+        "train/00000002",
+        "train/00000046",
+        "train/00000062",
+        "train/00000084",
+        "train/00000085"
+      ]
+    },
+    "W_ROUTE_CHAIN_BREAK": {
+      "trips_affected": 11,
+      "examples": [
+        "train/00000002",
+        "train/00000019",
+        "train/00000033",
+        "train/00000041",
+        "train/00000042",
+        "train/00000069",
+        "train/00000075",
+        "train/00000080"
+      ]
+    },
+    "W_ROUTE_REVISIT": {
+      "trips_affected": 10,
+      "examples": [
+        "train/00000008",
+        "train/00000018",
+        "train/00000069",
+        "train/00000075",
+        "train/00000084",
+        "train/00000086",
+        "train/00000090",
+        "train/00000092"
+      ]
+    }
+  }
+}
