@@ -1,0 +1,81 @@
+{
+  "feature_names": [
+    "dist_m",
+    "proj_t",
+    "end_dist_min_m",
+    "log_arc_len",
+    "dist_rank",
+    "dist_gap_to_best",
+    "dist_ratio_to_best",
+    "n_cands",
+    "n_close_cands",
+    "cos_heading",
+    "heading_valid",
+    "ctx_dist_mean",
+    "ctx_dist_max",
+    "ctx_gap_to_best",
+    "from_in_deg",
+    "to_out_deg",
+    "has_reverse_twin",
+    "local_arc_density",
+    "speed_mps",
+    "dt_prev_s",
+    "long_gap"
+  ],
+  "feature_groups": {
+    "geometry": [
+      "dist_m",
+      "proj_t",
+      "end_dist_min_m",
+      "log_arc_len"
+    ],
+    "ranking": [
+      "dist_rank",
+      "dist_gap_to_best",
+      "dist_ratio_to_best",
+      "n_cands",
+      "n_close_cands"
+    ],
+    "heading": [
+      "cos_heading",
+      "heading_valid"
+    ],
+    "context": [
+      "ctx_dist_mean",
+      "ctx_dist_max",
+      "ctx_gap_to_best"
+    ],
+    "network": [
+      "from_in_deg",
+      "to_out_deg",
+      "has_reverse_twin",
+      "local_arc_density"
+    ],
+    "temporal": [
+      "speed_mps",
+      "dt_prev_s",
+      "long_gap"
+    ]
+  },
+  "config": {
+    "candidates": {
+      "radii_m": [
+        50,
+        100,
+        200,
+        400
+      ],
+      "min_candidates": 3,
+      "max_candidates": 24,
+      "fallback_k": 5
+    },
+    "features": {
+      "heading_half_window": 2,
+      "context_half_window": 3,
+      "min_move_for_heading_m": 3.0,
+      "close_cand_margin_m": 5.0,
+      "density_radius_m": 50.0
+    }
+  },
+  "git_commit": "239b99dda7dd5754a808ee0bc7d964e0b7d752ac"
+}

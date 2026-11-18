@@ -1,0 +1,1 @@
+"""PathSnap candidates package."""

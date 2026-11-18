@@ -1,0 +1,16 @@
+# Member 2: model comparison settings.
+seed: 42
+cv_folds: 5                      # GroupKFold by trip_id
+obs_stride: 4                    # train on every 4th GPS point (1 Hz neighbours are near-duplicates)
+knn_max_train_rows: 80000      # KNN compares every query with every stored row, so keep it small
+train_score_sample_rows: 50000   # rows used to measure training-fold scores (overfitting check)
+selection_rule: "highest mean CV Macro F1; tie-break lowest mean CV Log Loss"
+models:
+  - LogisticRegression
+  - GaussianNB
+  - KNN
+  - DecisionTree
+  - RandomForest
+  - HistGradientBoosting
+  - LightGBM
+  - MLP

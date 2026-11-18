@@ -1,0 +1,15 @@
+# Member 2: candidate generation and feature settings.
+# Values chosen from results/candidates/radius_sweep.csv (see docs/MEMBER2_NOTES.md).
+
+candidates:
+  radii_m: [50, 100, 200, 400]   # start at 50 m, widen while fewer than min_candidates
+  min_candidates: 3
+  max_candidates: 24             # keep the nearest K
+  fallback_k: 5                  # nearest arcs anywhere if nothing within the largest radius
+
+features:
+  heading_half_window: 2         # GPS points before/after used for the direction of travel
+  context_half_window: 3         # neighbouring points used for "do neighbours fit this arc"
+  min_move_for_heading_m: 3.0    # below this the vehicle is ~stopped: heading unreliable
+  close_cand_margin_m: 5.0       # candidates this close to the best one count as "close"
+  density_radius_m: 50.0

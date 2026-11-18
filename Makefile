@@ -10,7 +10,7 @@ SHELL  := /bin/bash
 export TMPDIR      ?= $(CURDIR)/.tmp
 export MPLCONFIGDIR ?= $(CURDIR)/.mpl
 
-.PHONY: help setup validate eda labels recon clean
+.PHONY: help setup validate eda labels recon clean features radius-sweep leakage train member2
 
 help:
 	@echo "PathSnap targets"
@@ -19,6 +19,11 @@ help:
 	@echo "  eda        dataset measurements, figures and Folium maps"
 	@echo "  labels     observation-level reference labels for every trip"
 	@echo "  recon      dataset reconnaissance summary"
+	@echo "  features   candidates + features + labels for every trip (Member 2; needs make labels)"
+	@echo "  radius-sweep  candidate radius vs miss rate experiment"
+	@echo "  leakage    prediction-path leakage checks"
+	@echo "  train      train/compare models, select best, ablation + importance"
+	@echo "  member2    labels -> features -> radius-sweep -> leakage -> train"
 	@echo "  clean      remove caches and temporary files"
 
 setup:
@@ -39,6 +44,23 @@ labels:
 
 recon:
 	$(PYTHON) scripts/recon.py
+
+features:
+	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
+	$(PYTHON) scripts/build_features.py $(ARGS)
+
+radius-sweep:
+	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
+	$(PYTHON) scripts/radius_sweep.py
+
+leakage:
+	$(PYTHON) scripts/check_leakage.py
+
+train:
+	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
+	$(PYTHON) scripts/train.py $(ARGS)
+
+member2: labels features radius-sweep leakage train
 
 clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +

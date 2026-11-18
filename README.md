@@ -105,7 +105,7 @@ make recon      # dataset reconnaissance summary
 | Metric projection, road graph | Member 1 | Done |
 | EDA, data-quality evidence, Folium maps | Member 1 | Done |
 | Observation-level label derivation | Member 1 | Done |
-| Candidates, features, model experiments | Member 2 | Next |
+| Candidates, features, model experiments | Member 2 | Done (see docs/MEMBER2_NOTES.md) |
 | Bayesian optimisation, HMM/Viterbi, pipeline | Member 3 | Planned |
 | API, UI, deployment | Member 4 | Planned |
 

@@ -1,0 +1,11 @@
+{
+  "selected_model": "LightGBM",
+  "rule": "highest mean CV Macro F1; tie-break lowest mean CV Log Loss",
+  "cv_macro_f1": 0.9141046549515197,
+  "cv_log_loss": 0.08847144259820389,
+  "student_test_top1": 0.8957039202380331,
+  "student_test_macro_f1": 0.9362947458487336,
+  "output": "predict_proba positive-class probability; not separately calibrated",
+  "seed": 42,
+  "git_commit": "239b99dda7dd5754a808ee0bc7d964e0b7d752ac"
+}
