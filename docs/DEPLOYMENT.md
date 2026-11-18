@@ -5,6 +5,38 @@
 - **Laptop 2** runs the UI, which lists the evaluation trips, sends the chosen trip id to the
   API, and shows the returned route and results.
 
+## Current wiring
+
+Both laptops are on the same tailnet, so no hotspot or venue Wi-Fi is needed. The host runs
+the API and the model; the presenting laptop only runs the UI.
+
+| Role | Tailnet IP |
+|---|---|
+| Host (API, model, HMM, scoring) | `100.98.58.11` |
+| Presenting laptop (UI only) | `100.84.49.97` |
+
+Host, from the repository root:
+
+```bash
+PATHSNAP_CORS_ORIGINS='*' python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+
+Presenting laptop, after `git pull`, from the repository root:
+
+```bash
+python3 ui/serve.py --api http://100.98.58.11:8000
+```
+
+Then open `http://localhost:5500`. Before that, confirm the host answers:
+
+```bash
+curl http://100.98.58.11:8000/api/health
+```
+
+`ui/serve.py` forwards every call to the host and prints each request and response, so the
+presenting laptop shows the traffic as well. The host prints the same requests to its own
+terminal and to `logs/api.log`.
+
 ## 0. Before the evaluator arrives (once)
 
 1. **Put both laptops on the same network.** Venue/university Wi-Fi often blocks
