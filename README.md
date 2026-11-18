@@ -71,7 +71,7 @@ Each trip directory holds four headerless whitespace-separated files, all named 
 Identifiers are trip-local. Row `i` of a trip's `.nodes` file is node `i` for that trip, and
 nothing in the project compares identifiers across trips.
 
-## Setup
+## Setup for the project
 
 Requires Python 3.11 or newer.
 
