@@ -15,6 +15,8 @@ evaluator UI.
 ```text
 .
 ├── configs/                  Run configuration (paths, partitions, thresholds)
+├── docs/
+│   └── DATA_NOTES.md         Data-quality record: issues, assumptions, decisions
 ├── data/
 │   ├── raw/                  Supplied trip data (not committed)
 │   ├── processed/            Cached derived artefacts
@@ -91,6 +93,7 @@ The `Makefile` covers the common tasks:
 
 ```bash
 make validate   # parse and validate every supplied trip, write results/validation/
+make eda        # measurements, figures and interactive maps for the report
 make recon      # dataset reconnaissance summary
 ```
 
@@ -99,9 +102,9 @@ make recon      # dataset reconnaissance summary
 | Area | Owner | Status |
 |---|---|---|
 | Trip loading, validation, canonical `Trip` object | Member 1 | Done |
-| Metric projection, road graph | Member 1 | Next |
-| EDA, data-quality evidence, Folium maps | Member 1 | Planned |
-| Observation-level label derivation | Member 1 | Planned |
+| Metric projection, road graph | Member 1 | Done |
+| EDA, data-quality evidence, Folium maps | Member 1 | Done |
+| Observation-level label derivation | Member 1 | Next |
 | Candidates, features, model experiments | Member 2 | Planned |
 | Bayesian optimisation, HMM/Viterbi, pipeline | Member 3 | Planned |
 | API, UI, deployment | Member 4 | Planned |

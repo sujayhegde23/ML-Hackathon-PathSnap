@@ -1,0 +1,147 @@
+{
+  "partition_scope": [
+    "student_test",
+    "train"
+  ],
+  "by_partition": {
+    "student_test": {
+      "trips": 10,
+      "gps_points": 19160,
+      "nodes": 90689,
+      "arcs": 185041,
+      "route_arcs": 3477,
+      "invalid_trips": [],
+      "trips_with_gaps": [
+        "00000065"
+      ],
+      "trips_with_duplicate_fixes": [],
+      "offset_trips": [],
+      "total_path_km": 296.96781626231484
+    },
+    "train": {
+      "trips": 80,
+      "gps_points": 208417,
+      "nodes": 1933485,
+      "arcs": 3876904,
+      "route_arcs": 31336,
+      "invalid_trips": [],
+      "trips_with_gaps": [
+        "00000002",
+        "00000006",
+        "00000011",
+        "00000014",
+        "00000021",
+        "00000024",
+        "00000028",
+        "00000041",
+        "00000042",
+        "00000043",
+        "00000044",
+        "00000054",
+        "00000055",
+        "00000069",
+        "00000070",
+        "00000078",
+        "00000081",
+        "00000084",
+        "00000085",
+        "00000088",
+        "00000089",
+        "00000090"
+      ],
+      "trips_with_duplicate_fixes": [
+        "00000002",
+        "00000046",
+        "00000062",
+        "00000084",
+        "00000085"
+      ],
+      "offset_trips": [
+        "00000054"
+      ],
+      "total_path_km": 2978.415085891347
+    }
+  },
+  "sampling": {
+    "share_of_steps_equal_to_1s": 0.9431509469911573,
+    "median_of_median_dt_s": 1.0
+  },
+  "gps_to_road": {
+    "median_of_trip_medians_m": 4.156036779053245,
+    "median_of_trip_p95_m": 12.999458610105583,
+    "worst_trip": "00000054",
+    "worst_trip_median_m": 83.93289938228489
+  },
+  "gaps": {
+    "trips_with_gap": 23,
+    "total_gaps": 70,
+    "largest_gap_s": 153064.0,
+    "largest_gap_trip": "00000090"
+  },
+  "missing_values": {
+    "trips_with_nonfinite": 0,
+    "total_nonfinite": 0,
+    "trips_with_decreasing_timestamps": 0,
+    "trips_with_out_of_range_coordinates": 0,
+    "trips_with_duplicate_fixes": 5,
+    "min_track_inside_nodes_bbox_share": 1.0
+  },
+  "connectivity": {
+    "median_components": 19.0,
+    "min_largest_component_share": 0.6927966101694916
+  },
+  "projection": {
+    "max_relative_error": 0.005826228819944017,
+    "mean_relative_error": 0.0009587378124087091
+  },
+  "audit": {
+    "files": {
+      "files_checked": 360,
+      "missing_files": 0,
+      "schema_mismatches": 0,
+      "size_bytes": {
+        ".arcs": {
+          "min": 4700,
+          "median": 183048,
+          "max": 3856964,
+          "total": 46169908
+        },
+        ".nodes": {
+          "min": 5681,
+          "median": 187450,
+          "max": 2945057,
+          "total": 40253826
+        },
+        ".route": {
+          "min": 253,
+          "median": 1394,
+          "max": 12121,
+          "total": 184046
+        },
+        ".track": {
+          "min": 8278,
+          "median": 48508,
+          "max": 626431,
+          "total": 7498263
+        }
+      }
+    },
+    "reference_route": {
+      "trips_with_route": 90,
+      "trips_with_chain_breaks": 11,
+      "trips_revisiting_an_arc": 10,
+      "median_ratio_route_to_points": 0.19047709344660196,
+      "median_dist_to_route_m": 4.570357178302972,
+      "worst_route_offset_trip": "00000054",
+      "worst_route_offset_m": 138.22310978840295
+    },
+    "coordinate_order": {
+      "max_abs_column0": 137.237029,
+      "max_abs_column1": 61.69959,
+      "trips_column0_above_90": 8,
+      "trips_column1_above_90": 0,
+      "trips_where_written_order_is_closer": 90,
+      "conclusion": "column 0 is longitude, column 1 is latitude: a latitude cannot exceed 90 degrees, and several trips exceed it in column 0 only; reading the pair in the written order also puts every fix far closer to the network"
+    }
+  }
+}
