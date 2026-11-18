@@ -1,0 +1,13 @@
+{
+  "emission_weight": 1.0,
+  "distance_weight": 1.0,
+  "distance_sigma_m": 5.0,
+  "transition_beta_m": 1.0,
+  "route_factor": 2.0,
+  "route_slack_m": 100.0,
+  "max_gap_s": 60.0,
+  "min_prob": 1e-06,
+  "tuned_on": "24 train trips (out-of-fold scores), objective mean Top-1",
+  "train_top1_hmm": 0.940573114336753,
+  "train_top1_classifier_only": 0.9056390836266223
+}

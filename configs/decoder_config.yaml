@@ -1,0 +1,11 @@
+# Member 3: HMM/Viterbi decoder defaults (see src/pathsnap/hmm/viterbi.py).
+# scripts/evaluate_routes.py tunes these on train trips and saves the chosen values to
+# artifacts/models/final/decoder_config.json, which the pipeline prefers when present.
+emission_weight: 1.0       # multiplies log(classifier probability)
+distance_weight: 0.0       # optional extra Gaussian distance term (classifier already uses distance)
+distance_sigma_m: 5.0
+transition_beta_m: 5.0     # metres; larger = more tolerant of route vs straight-line mismatch
+route_factor: 2.0          # shortest-path search cutoff = route_factor * straight-line + slack
+route_slack_m: 100.0
+max_gap_s: 60.0            # split the trip at larger time gaps (= MAX_DT_GAP_S)
+min_prob: 1.0e-6           # floor on classifier probability before taking the log

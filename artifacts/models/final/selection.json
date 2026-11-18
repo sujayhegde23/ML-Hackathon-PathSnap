@@ -1,0 +1,18 @@
+{
+  "selected_model": "LightGBM",
+  "variant": "LightGBM tuned (Optuna)",
+  "params": {
+    "num_leaves": 54,
+    "learning_rate": 0.01983516391575695,
+    "n_estimators": 400,
+    "min_child_samples": 27,
+    "subsample": 0.5355142812262543,
+    "colsample_bytree": 0.679227897765512,
+    "reg_lambda": 1.4095061994926998
+  },
+  "rule": "higher 5-fold grouped CV Macro F1 (tie: lower CV Log Loss); student_test not used to choose",
+  "cv_macro_f1": 0.9145424242806005,
+  "student_test_top1": 0.8919455029493135,
+  "student_test_macro_f1": 0.9371877473983878,
+  "seed": 42
+}

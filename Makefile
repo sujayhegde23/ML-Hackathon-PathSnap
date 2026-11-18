@@ -10,7 +10,7 @@ SHELL  := /bin/bash
 export TMPDIR      ?= $(CURDIR)/.tmp
 export MPLCONFIGDIR ?= $(CURDIR)/.mpl
 
-.PHONY: help setup validate eda labels recon clean features radius-sweep leakage train member2
+.PHONY: help setup validate eda labels recon clean features radius-sweep leakage train member2 hpo routes check-pipeline predict-batch member3
 
 help:
 	@echo "PathSnap targets"
@@ -24,6 +24,11 @@ help:
 	@echo "  leakage    prediction-path leakage checks"
 	@echo "  train      train/compare models, select best, ablation + importance"
 	@echo "  member2    labels -> features -> radius-sweep -> leakage -> train"
+	@echo "  hpo        Optuna (Bayesian) tuning of LightGBM + untuned vs tuned (Member 3)"
+	@echo "  routes     decoder tuning + classifier vs HMM route comparison (Member 3)"
+	@echo "  check-pipeline  decoder/pipeline contract checks"
+	@echo "  predict-batch   run the final pipeline on all supplied trips"
+	@echo "  member3    hpo -> routes -> check-pipeline -> predict-batch"
 	@echo "  clean      remove caches and temporary files"
 
 setup:
@@ -61,6 +66,22 @@ train:
 	$(PYTHON) scripts/train.py $(ARGS)
 
 member2: labels features radius-sweep leakage train
+
+hpo:
+	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
+	$(PYTHON) scripts/hpo.py $(ARGS)
+
+routes:
+	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
+	$(PYTHON) scripts/evaluate_routes.py $(ARGS)
+
+check-pipeline:
+	$(PYTHON) scripts/check_pipeline.py
+
+predict-batch:
+	$(PYTHON) scripts/predict_batch.py --partitions student_test train
+
+member3: hpo routes check-pipeline predict-batch
 
 clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +

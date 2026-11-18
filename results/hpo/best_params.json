@@ -1,0 +1,16 @@
+{
+  "best_params": {
+    "num_leaves": 54,
+    "learning_rate": 0.01983516391575695,
+    "n_estimators": 400,
+    "min_child_samples": 27,
+    "subsample": 0.5355142812262543,
+    "colsample_bytree": 0.679227897765512,
+    "reg_lambda": 1.4095061994926998
+  },
+  "best_search_macro_f1": 0.9158781320047021,
+  "n_trials": 29,
+  "n_complete": 16,
+  "n_pruned": 13,
+  "search_wall_clock_s_this_run": 407.48810736400003
+}

@@ -1,0 +1,16 @@
+{
+  "files_sha256_16": {
+    "decoder_config.json": "ef9c4b2074b2db73",
+    "feature_spec.json": "17fe788a54e42e00",
+    "model.joblib": "7938853650745fb1",
+    "selection.json": "91c0ca52299cd8f6"
+  },
+  "library_versions": {
+    "python": "3.13.18",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.1",
+    "lightgbm": "4.7.0"
+  },
+  "git_commit": "239b99dda7dd5754a808ee0bc7d964e0b7d752ac"
+}
