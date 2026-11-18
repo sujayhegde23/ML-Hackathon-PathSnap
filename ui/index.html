@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PathSnap — route reconstruction</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2330; --mute:#667085; --line:#e4e7ec; --blue:#1f6feb; --ok:#12805c; --warn:#b54708; --err:#c0362c; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin:0; font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:var(--bg); }
+  header { display:flex; align-items:center; gap:12px; padding:12px 18px; background:var(--card); border-bottom:1px solid var(--line); }
+  header h1 { font-size:17px; margin:0; }
+  header .sub { color:var(--mute); }
+  .badge { margin-left:auto; padding:3px 10px; border-radius:999px; font-size:12px; background:#eef0f3; color:var(--mute); }
+  .badge.ok { background:#e7f6ef; color:var(--ok); } .badge.warn { background:#fef4e6; color:var(--warn); } .badge.err { background:#fdecea; color:var(--err); }
+  main { display:grid; grid-template-columns: 360px 1fr; gap:14px; padding:14px; height: calc(100vh - 58px); }
+  aside { display:flex; flex-direction:column; gap:12px; overflow:auto; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .card h2 { font-size:13px; margin:0 0 8px; text-transform:uppercase; letter-spacing:.04em; color:var(--mute); }
+  .row { display:flex; gap:8px; }
+  input[type=text] { flex:1; padding:7px 9px; border:1px solid var(--line); border-radius:7px; font:inherit; }
+  button { padding:7px 12px; border:1px solid var(--line); border-radius:7px; background:#fff; font:inherit; cursor:pointer; }
+  button.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+  button:disabled { opacity:.5; cursor:default; }
+  #trips { display:grid; grid-template-columns: 1fr 1fr; gap:6px; }
+  #trips button { text-align:left; }
+  #trips button.sel { border-color:var(--blue); box-shadow: inset 0 0 0 1px var(--blue); }
+  #trips small { color:var(--mute); display:block; font-size:11px; }
+  table { width:100%; border-collapse:collapse; } td { padding:3px 0; vertical-align:top; } td:first-child { color:var(--mute); width:52%; }
+  .big { font-size:22px; font-weight:600; }
+  .msg { padding:8px 10px; border-radius:7px; } .msg.err { background:#fdecea; color:var(--err); } .msg.info { background:#eef4ff; color:#1849a9; }
+  #mapwrap { position:relative; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  #map, #fallback { position:absolute; inset:0; width:100%; height:100%; }
+  #empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--mute); z-index:500; pointer-events:none; }
+  .legend { position:absolute; right:10px; bottom:22px; z-index:600; background:#fff; border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:12px; }
+  .sw { display:inline-block; width:18px; height:4px; vertical-align:middle; margin-right:6px; border-radius:2px; }
+  pre { margin:0; max-height:220px; overflow:auto; font-size:11px; background:#f7f8fa; padding:8px; border-radius:6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PathSnap</h1><span class="sub">GPS → road route reconstruction · evaluator UI (Laptop 2)</span>
+  <span id="badge" class="badge">not connected</span>
+</header>
+<main>
+  <aside>
+    <div class="card">
+      <h2>API (Laptop 1)</h2>
+      <div class="row"><input id="base" type="text" placeholder="leave empty when using ui/serve.py"><button id="connect">Connect</button></div>
+    </div>
+    <div class="card">
+      <h2>Evaluation trips</h2>
+      <div id="trips"><span class="sub">Connect to load the trips.</span></div>
+    </div>
+    <div id="msg"></div>
+    <div class="card" id="evalCard" hidden>
+      <h2>Evaluation (computed on the API server)</h2>
+      <div id="eval"></div>
+    </div>
+    <div class="card" id="resultCard" hidden>
+      <h2>Result</h2>
+      <table id="result"></table>
+    </div>
+    <div class="card" id="jsonCard" hidden>
+      <details><summary>Response summary (JSON)</summary><pre id="json"></pre></details>
+    </div>
+  </aside>
+  <section id="mapwrap">
+    <div id="map"></div><canvas id="fallback" hidden></canvas>
+    <div id="empty">Select a trip to see its predicted route.</div>
+    <div class="legend"><div><span class="sw" style="background:#1f6feb"></span>Predicted route</div>
+      <div><span class="sw" style="background:#555;height:6px;width:6px;border-radius:50%"></span>GPS fixes</div></div>
+  </section>
+</main>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const KEY = "pathsnap_api_base";
+let base = (() => { try { const v = localStorage.getItem(KEY); if (v !== null) return v; } catch (e) {}
+  return location.protocol.startsWith("http") ? "" : "http://localhost:8000"; })();
+$("base").value = base;
+let map = null, layers = null, busy = false;
+
+function setBadge(kind, text) { const b = $("badge"); b.className = "badge " + kind; b.textContent = text; }
+function message(kind, text) { const m = $("msg"); m.innerHTML = ""; if (!text) return;
+  const d = document.createElement("div"); d.className = "msg " + kind; d.textContent = text; m.appendChild(d); }
+
+async function api(path, opts) {
+  let r;
+  try { r = await fetch(base + path, opts); }
+  catch (e) { throw new Error("Cannot reach the API at " + (base || location.origin) + " (" + e.message + ")"); }
+  let body = {}; try { body = await r.json(); } catch (e) {}
+  if (!r.ok) { const d = body.detail || {}; throw new Error((d.code ? d.code + ": " : "") + (d.message || ("HTTP " + r.status))); }
+  return body;
+}
+
+async function connect() {
+  base = $("base").value.trim().replace(/\/$/, "");
+  try { localStorage.setItem(KEY, base); } catch (e) {}
+  setBadge("", "connecting…"); message("", "");
+  try {
+    const h = await api("/api/health");
+    setBadge(h.status === "ok" ? "ok" : "warn", "API " + h.status + (h.model_version ? " · " + h.model_version : ""));
+    if (h.error) message("err", "Server: " + h.error);
+    await loadTrips();
+    const auto = new URLSearchParams(location.search).get("trip");   // e.g. index.html?trip=00000052
+    if (auto) predict(auto);
+  } catch (e) { setBadge("err", "API unreachable"); message("err", e.message); }
+}
+
+async function loadTrips() {
+  const box = $("trips"); box.textContent = "Loading…";
+  const t = await api("/api/trips");
+  box.innerHTML = "";
+  if (!t.trips.length) { box.textContent = "No trips found on the server (put trip folders in data/eval/)."; return; }
+  for (const trip of t.trips) {
+    const b = document.createElement("button");
+    b.dataset.id = trip.trip_id;
+    b.textContent = trip.trip_id;
+    const s = document.createElement("small"); s.textContent = trip.partition + " · " + trip.n_fixes + " fixes"; b.appendChild(s);
+    b.onclick = () => predict(trip.trip_id);
+    box.appendChild(b);
+  }
+}
+
+function setBusy(on, id) {
+  busy = on;
+  for (const b of $("trips").querySelectorAll("button")) { b.disabled = on; b.classList.toggle("sel", b.dataset.id === id); }
+}
+
+async function predict(id) {
+  if (busy) return;
+  setBusy(true, id); message("info", "Running the pipeline for trip " + id + " on the API server…");
+  const t0 = performance.now();
+  try {
+    const r = await api("/api/predict", { method: "POST", headers: { "Content-Type": "application/json" },
+                                          body: JSON.stringify({ trip_id: id }) });
+    message("", ""); render(r, performance.now() - t0);
+  } catch (e) { message("err", e.message); }
+  finally { setBusy(false, id); }
+}
+
+function row(t, k, v) { const tr = t.insertRow(); tr.insertCell().textContent = k; tr.insertCell().textContent = v; }
+const pct = (v) => (v == null || isNaN(v)) ? "–" : (100 * v).toFixed(1) + "%";
+const num = (v, d = 3) => (v == null || isNaN(v)) ? "–" : Number(v).toFixed(d);
+
+function render(r, roundTripMs) {
+  const t = $("result"); t.innerHTML = "";
+  row(t, "Trip", r.trip_id + " (" + r.partition + ")");
+  row(t, "Model version", r.model_version);
+  row(t, "GPS fixes", r.observation_arc_ids.length.toLocaleString());
+  row(t, "Predicted route arcs", r.predicted_arc_ids.length.toLocaleString());
+  row(t, "Chain restarts (gaps)", (r.diagnostics.n_breaks ?? 0));
+  row(t, "Server latency", Math.round(r.latency_ms) + " ms");
+  row(t, "Round trip", Math.round(roundTripMs) + " ms");
+  $("resultCard").hidden = false;
+
+  const e = $("eval"); e.innerHTML = "";
+  if (r.evaluation) {
+    const big = document.createElement("div"); big.className = "big"; big.textContent = pct(r.evaluation.observation_top1_accuracy);
+    const cap = document.createElement("div"); cap.className = "sub"; cap.textContent = "observation-level Top-1 accuracy";
+    const tb = document.createElement("table");
+    row(tb, "Labelled observations", r.evaluation.labelled_observations);
+    row(tb, "Route continuity", num(r.evaluation.route_continuity));
+    row(tb, "Arc-set F1", num(r.evaluation.arc_set_f1));
+    row(tb, "Normalised edit distance", num(r.evaluation.normalized_edit_distance));
+    e.append(big, cap, tb);
+  } else { e.textContent = r.evaluation_note || "No evaluation returned."; }
+  $("evalCard").hidden = false;
+
+  const summary = { trip_id: r.trip_id, model_version: r.model_version, latency_ms: Math.round(r.latency_ms),
+    n_predicted_arcs: r.predicted_arc_ids.length, "predicted_arc_ids[:10]": r.predicted_arc_ids.slice(0, 10),
+    evaluation: r.evaluation, diagnostics: r.diagnostics };
+  $("json").textContent = JSON.stringify(summary, null, 2); $("jsonCard").hidden = false;
+  draw(r);
+}
+
+function thin(points, maxN) { if (points.length <= maxN) return points; const k = Math.ceil(points.length / maxN);
+  return points.filter((_, i) => i % k === 0); }
+
+function draw(r) {
+  $("empty").hidden = true;
+  const segs = (r.route_segments_lonlat && r.route_segments_lonlat.length) ? r.route_segments_lonlat : [r.polyline_lonlat];
+  const gps = thin(r.gps_lonlat, 4000);
+  if (window.L) {
+    if (!map) {
+      map = L.map("map", { preferCanvas: true });
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(map);
+      layers = L.layerGroup().addTo(map);
+    }
+    layers.clearLayers();
+    const g = L.layerGroup(gps.map(p => L.circleMarker([p[1], p[0]], { radius: 2, color: "#555", weight: 0, fillOpacity: 0.55 })));
+    const route = L.layerGroup(segs.filter(s => s.length > 1).map(s => L.polyline(s.map(p => [p[1], p[0]]), { color: "#1f6feb", weight: 4, opacity: 0.9 })));
+    g.addTo(layers); route.addTo(layers);
+    const first = r.gps_lonlat[0], last = r.gps_lonlat[r.gps_lonlat.length - 1];
+    L.circleMarker([first[1], first[0]], { radius: 7, color: "#12805c", fillOpacity: 1 }).bindTooltip("start").addTo(layers);
+    L.circleMarker([last[1], last[0]], { radius: 7, color: "#c0362c", fillOpacity: 1 }).bindTooltip("end").addTo(layers);
+    const all = segs.flat().concat(gps).map(p => [p[1], p[0]]);
+    if (all.length) map.fitBounds(L.latLngBounds(all), { padding: [20, 20] });
+    setTimeout(() => map.invalidateSize(), 0);
+  } else {
+    drawCanvas(segs, gps);
+  }
+}
+
+function drawCanvas(segs, gps) {   // offline fallback: no basemap, but the same data
+  const c = $("fallback"); c.hidden = false; $("map").hidden = true;
+  const w = c.width = c.clientWidth, h = c.height = c.clientHeight, ctx = c.getContext("2d");
+  const pts = segs.flat().concat(gps); if (!pts.length) return;
+  const lat0 = pts.reduce((a, p) => a + p[1], 0) / pts.length, kx = Math.cos(lat0 * Math.PI / 180);
+  const xs = pts.map(p => p[0] * kx), ys = pts.map(p => p[1]);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const s = 0.92 * Math.min(w / ((maxX - minX) || 1e-9), h / ((maxY - minY) || 1e-9));
+  const X = (p) => (w - s * (maxX - minX)) / 2 + s * (p[0] * kx - minX), Y = (p) => h - ((h - s * (maxY - minY)) / 2 + s * (p[1] - minY));
+  ctx.clearRect(0, 0, w, h); ctx.fillStyle = "rgba(85,85,85,.55)";
+  for (const p of gps) { ctx.beginPath(); ctx.arc(X(p), Y(p), 1.6, 0, 6.3); ctx.fill(); }
+  ctx.strokeStyle = "#1f6feb"; ctx.lineWidth = 3;
+  for (const seg of segs) { ctx.beginPath(); seg.forEach((p, i) => i ? ctx.lineTo(X(p), Y(p)) : ctx.moveTo(X(p), Y(p))); ctx.stroke(); }
+}
+
+$("connect").onclick = connect;
+$("base").addEventListener("keydown", (e) => { if (e.key === "Enter") connect(); });
+connect();
+</script>
+</body>
+</html>

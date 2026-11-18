@@ -97,6 +97,33 @@ make eda        # measurements, figures and interactive maps for the report
 make recon      # dataset reconnaissance summary
 ```
 
+## Reproducing the results
+
+```bash
+make labels      # Member 1: observation-level reference labels
+make member2     # candidates, features, radius sweep, leakage checks, 8-model comparison
+make member3     # Optuna tuning, HMM/Viterbi decoder tuning and route comparison, checks, batch predictions
+```
+
+Notes per stage: `docs/DATA_NOTES.md`, `docs/MEMBER2_NOTES.md`, `docs/MEMBER3_NOTES.md`.
+
+## Running the two-laptop demo
+
+Laptop 1 (API, model, HMM, server-side scoring):
+
+```bash
+make api                                   # prints the command for Laptop 2, with this laptop's IP
+```
+
+Laptop 2 (UI, Python 3 standard library only):
+
+```bash
+python3 ui/serve.py --api http://<LAPTOP-1-IP>:8000     # then open http://localhost:5500
+```
+
+Evaluation trips go in `data/eval/<trip_id>/` on Laptop 1. Full runbook, troubleshooting and
+API reference: `docs/DEPLOYMENT.md`.
+
 ## Implementation status
 
 | Area | Owner | Status |
@@ -107,7 +134,7 @@ make recon      # dataset reconnaissance summary
 | Observation-level label derivation | Member 1 | Done |
 | Candidates, features, model experiments | Member 2 | Done (see docs/MEMBER2_NOTES.md) |
 | Bayesian optimisation, HMM/Viterbi, pipeline | Member 3 | Done (see docs/MEMBER3_NOTES.md) |
-| API, UI, deployment | Member 4 | Planned |
+| API, UI, deployment | Member 4 | Done (see docs/DEPLOYMENT.md) |
 
 ## Conventions
 

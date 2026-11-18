@@ -4,13 +4,15 @@
 #     make validate PYTHON=/path/to/venv/bin/python
 
 PYTHON ?= python3
+PORT   ?= 8000
+API    ?= http://localhost:8000
 SHELL  := /bin/bash
 
 # Some sandboxes make the default temp/matplotlib directories unwritable.
 export TMPDIR      ?= $(CURDIR)/.tmp
 export MPLCONFIGDIR ?= $(CURDIR)/.mpl
 
-.PHONY: help setup validate eda labels recon clean features radius-sweep leakage train member2 hpo routes check-pipeline predict-batch member3
+.PHONY: help setup validate eda labels recon clean features radius-sweep leakage train member2 hpo routes check-pipeline predict-batch member3 api ui
 
 help:
 	@echo "PathSnap targets"
@@ -29,6 +31,8 @@ help:
 	@echo "  check-pipeline  decoder/pipeline contract checks"
 	@echo "  predict-batch   run the final pipeline on all supplied trips"
 	@echo "  member3    hpo -> routes -> check-pipeline -> predict-batch"
+	@echo "  api        Laptop 1: start the FastAPI server on 0.0.0.0:$(PORT)"
+	@echo "  ui         Laptop 2: serve the UI, forwarding to API=$(API)"
 	@echo "  clean      remove caches and temporary files"
 
 setup:
@@ -82,6 +86,12 @@ predict-batch:
 	$(PYTHON) scripts/predict_batch.py --partitions student_test train
 
 member3: hpo routes check-pipeline predict-batch
+
+api:
+	$(PYTHON) -m uvicorn api.main:app --host 0.0.0.0 --port $(PORT)
+
+ui:
+	$(PYTHON) ui/serve.py --api $(API)
 
 clean:
 	find . -type d -name __pycache__ -prune -exec rm -rf {} +
