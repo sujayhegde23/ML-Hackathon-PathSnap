@@ -87,6 +87,10 @@ predict-batch:
 
 member3: hpo routes check-pipeline predict-batch
 
+report:
+	$(PYTHON) scripts/build_report.py
+	libreoffice --headless --convert-to pdf --outdir report report/PathSnap_Report.html
+
 api:
 	$(PYTHON) -m uvicorn api.main:app --host 0.0.0.0 --port $(PORT)
 

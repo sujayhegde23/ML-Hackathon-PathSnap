@@ -107,6 +107,10 @@ make member3     # Optuna tuning, HMM/Viterbi decoder tuning and route compariso
 
 Notes per stage: `docs/DATA_NOTES.md`, `docs/MEMBER2_NOTES.md`, `docs/MEMBER3_NOTES.md`.
 
+```bash
+make report      # technical report: report/PathSnap_Report.pdf
+```
+
 ## Running the two-laptop demo
 
 Laptop 1 (API, model, HMM, server-side scoring):
