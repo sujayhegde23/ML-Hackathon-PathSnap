@@ -104,8 +104,8 @@ make recon      # dataset reconnaissance summary
 | Trip loading, validation, canonical `Trip` object | Member 1 | Done |
 | Metric projection, road graph | Member 1 | Done |
 | EDA, data-quality evidence, Folium maps | Member 1 | Done |
-| Observation-level label derivation | Member 1 | Next |
-| Candidates, features, model experiments | Member 2 | Planned |
+| Observation-level label derivation | Member 1 | Done |
+| Candidates, features, model experiments | Member 2 | Next |
 | Bayesian optimisation, HMM/Viterbi, pipeline | Member 3 | Planned |
 | API, UI, deployment | Member 4 | Planned |
 

@@ -1,0 +1,107 @@
+{
+  "generated_from": "/home/kana/shriniketh/work/Student folder",
+  "trips": 90,
+  "seed": 42,
+  "defaults": {
+    "position_weight": 0.0,
+    "skip_penalty": 0.0
+  },
+  "monotone_for_every_trip": true,
+  "total_observations": 227577,
+  "total_valid": 218287,
+  "median_dist_to_label_m": 4.674874382509916,
+  "mean_confidence": 0.5801548091305663,
+  "agreement_with_naive_median": 0.9772480664445726,
+  "low_fidelity_trips": [
+    "00000002",
+    "00000033",
+    "00000043",
+    "00000054",
+    "00000066"
+  ],
+  "low_fidelity_note": "these trips keep their labels but are flagged in the per-trip table; no trip is dropped, so evaluation still covers them",
+  "runtime_seconds": 29.90049990499392,
+  "sweep": [
+    {
+      "term": "position_weight",
+      "value": 0.0,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 28.68375280851481,
+      "mean_confidence": 0.504131304480852,
+      "mean_valid_fraction": 0.9557398548065829,
+      "mean_agreement_with_naive": 0.953409767253919
+    },
+    {
+      "term": "position_weight",
+      "value": 0.05,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 28.830943939652315,
+      "mean_confidence": 0.4955703475187364,
+      "mean_valid_fraction": 0.9557398548065829,
+      "mean_agreement_with_naive": 0.8671266340181184
+    },
+    {
+      "term": "position_weight",
+      "value": 0.15,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 29.626863371786953,
+      "mean_confidence": 0.4558536441332633,
+      "mean_valid_fraction": 0.927412152831573,
+      "mean_agreement_with_naive": 0.7713792177848849
+    },
+    {
+      "term": "position_weight",
+      "value": 0.5,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 39.69282948191894,
+      "mean_confidence": 0.2844689518220771,
+      "mean_valid_fraction": 0.689862660649682,
+      "mean_agreement_with_naive": 0.4916701131041593
+    },
+    {
+      "term": "position_weight",
+      "value": 1.0,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 54.3146410075996,
+      "mean_confidence": 0.13314019735073604,
+      "mean_valid_fraction": 0.21087446263820092,
+      "mean_agreement_with_naive": 0.30549010936654947
+    },
+    {
+      "term": "skip_penalty",
+      "value": 0.0,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 28.68375280851481,
+      "mean_confidence": 0.504131304480852,
+      "mean_valid_fraction": 0.9557398548065829,
+      "mean_agreement_with_naive": 0.953409767253919
+    },
+    {
+      "term": "skip_penalty",
+      "value": 0.5,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 28.68375280851481,
+      "mean_confidence": 0.504131304480852,
+      "mean_valid_fraction": 0.9557398548065829,
+      "mean_agreement_with_naive": 0.953409767253919
+    },
+    {
+      "term": "skip_penalty",
+      "value": 2.0,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 28.68375280851481,
+      "mean_confidence": 0.504131304480852,
+      "mean_valid_fraction": 0.9557398548065829,
+      "mean_agreement_with_naive": 0.953409767253919
+    },
+    {
+      "term": "skip_penalty",
+      "value": 8.0,
+      "trips": 10,
+      "mean_median_dist_to_label_m": 28.68375280851481,
+      "mean_confidence": 0.504131304480852,
+      "mean_valid_fraction": 0.9557398548065829,
+      "mean_agreement_with_naive": 0.953409767253919
+    }
+  ]
+}

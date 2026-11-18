@@ -10,13 +10,14 @@ SHELL  := /bin/bash
 export TMPDIR      ?= $(CURDIR)/.tmp
 export MPLCONFIGDIR ?= $(CURDIR)/.mpl
 
-.PHONY: help setup validate eda recon clean
+.PHONY: help setup validate eda labels recon clean
 
 help:
 	@echo "PathSnap targets"
 	@echo "  setup      install Python dependencies"
 	@echo "  validate   parse and validate every supplied trip"
 	@echo "  eda        dataset measurements, figures and Folium maps"
+	@echo "  labels     observation-level reference labels for every trip"
 	@echo "  recon      dataset reconnaissance summary"
 	@echo "  clean      remove caches and temporary files"
 
@@ -31,6 +32,10 @@ validate:
 eda:
 	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
 	$(PYTHON) scripts/eda.py $(ARGS)
+
+labels:
+	@mkdir -p "$(TMPDIR)" "$(MPLCONFIGDIR)"
+	$(PYTHON) scripts/build_labels.py $(ARGS)
 
 recon:
 	$(PYTHON) scripts/recon.py
