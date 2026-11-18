@@ -1,0 +1,24 @@
+{
+  "radius_m": 50.0,
+  "sample_per_trip": 250,
+  "trips": 90,
+  "node_search_coverage": {
+    "overall": 0.7720888888888887,
+    "min": 0.148,
+    "median": 0.844
+  },
+  "arc_search_coverage": {
+    "overall": 0.980977777777778,
+    "min": 0.164,
+    "median": 1.0
+  },
+  "empty_at_radius": {
+    "trips_with_any_empty": 17,
+    "worst_trip": "00000054",
+    "worst_share_all": 0.8553306063273443,
+    "worst_share_labelled": 0.7714655810510733,
+    "median_share_all": 0.0,
+    "median_share_labelled": 0.0
+  },
+  "runtime_seconds": 67.47032760002185
+}

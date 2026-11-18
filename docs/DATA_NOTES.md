@@ -120,8 +120,8 @@ The route is meant to be a walk through the graph, and mostly it is. Across 90 t
   (`results/eda/reference_route.csv`).
 - Trip 00000054 sits far outside the network: its median distance to the nearest road is
   83.9 metres, and 85.5 percent of its observations have no candidate arc within 50 metres at
-  all. Candidate generation has to widen its radius and fall back to nearest arcs, or that trip
-  produces nothing.
+  all (`results/eda/candidate_probe.json`). Candidate generation has to widen its radius and fall
+  back to nearest arcs, or that trip produces nothing.
 - Trip 00000033 is a different case. Its fixes are close to the network in general, with only
   0.8 percent of observations lacking a candidate within 50 metres, but its recorded route runs
   a median of 122.8 metres away. The route for that trip, not the network, is what does not line
